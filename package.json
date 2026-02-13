@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "build": "esbuild src/plugin/plugin.ts --bundle --format=esm --platform=node --outfile=dist/async-agent.js --external:@opencode-ai/plugin --external:@opencode-ai/sdk"
+  },
+  "devDependencies": {
+    "esbuild": "^0.27.3"
+  }
+}
