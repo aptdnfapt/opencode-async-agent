@@ -2,6 +2,7 @@
 
 Async background delegation for OpenCode — run multiple AI agents in parallel.
 
+
 ## Features
 
 - **Parallel Execution** — Delegate tasks to background agents while you continue working
@@ -14,9 +15,9 @@ Async background delegation for OpenCode — run multiple AI agents in parallel.
 
 ### Manual Setup (Current)
 
- 1. **Clone and build:**
+  1. **Clone and build:**
     ```bash
-    git clone <repo-url>
+    git clone https://github.com/aptdnfapt/opencode-async-agent
     cd opencode-async-agent
     npm install
     npm run build
