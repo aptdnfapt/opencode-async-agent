@@ -152,17 +152,17 @@ export const AsyncAgentPlugin: Plugin = async (ctx) => {
 			}
 		},
 
-		// Inject delegation rules + bg-agents.md config into system prompt
+		// Inject delegation rules + async-agent.md config into system prompt
 		"experimental.chat.system.transform": async (
 			_input: { sessionID?: string; model: any },
 			output: { system: string[] },
 		): Promise<void> => {
 			output.system.push(DELEGATION_RULES)
 
-			// Read user's model config from ~/.config/opencode/bg-agents.md
+			// Read user's model config from ~/.config/opencode/async-agent.md
 			const bgConfig = await readBgAgentsConfig()
 			if (bgConfig.trim()) {
-				output.system.push(`<bg-agents-config>\n${bgConfig}\n</bg-agents-config>`)
+				output.system.push(`<async-agent-config>\n${bgConfig}\n</async-agent-config>`)
 			}
 		},
 
