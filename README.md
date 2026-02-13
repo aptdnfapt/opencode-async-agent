@@ -63,8 +63,24 @@ The plugin adds these tools to your OpenCode agent:
 
 ## Configuration
 
-first run "opencode models |grep <modelname> " and get the full provider/mode name 
-Create `~/.config/opencode/async-agent.md` to customize available models:
+### Step 1: Find Model Names
+
+First, run this command to see available models and get the full `provider/model` string:
+
+```bash
+opencode models | grep <model-name>
+```
+
+For example:
+```bash
+opencode models | grep minimax
+# Output: minimax/MiniMax-M2.5
+#         minimax/MiniMax-M2.1
+```
+
+### Step 2: Configure Models
+
+**Recommended:** Create `~/.config/opencode/async-agent.md`:
 
 ```markdown
 # Async Agent Model Configuration
@@ -74,13 +90,16 @@ Create `~/.config/opencode/async-agent.md` to customize available models:
 ### Fast
 - `minimax/MiniMax-M2.5`
 
-### Good Understanding  
+### Good Understanding
 - `synthetic/hf:moonshotai/Kimi-K2.5`
 
+## Notes
 Format: `provider/model` — pass to `delegate()` via the `model` parameter.
 ```
 
-This file is injected into your agent's system prompt automatically.
+This file is automatically injected into your agent's system prompt, so it knows which models to use when you ask it to delegate tasks.
+
+**Alternative:** Create subagent markdown files with hardcoded models. Learn more at [Agents Documentation](https://opencode.ai/docs/agents/#markdown)
 
 ## How I Use It
 
