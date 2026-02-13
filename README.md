@@ -9,6 +9,7 @@ Async background delegation for OpenCode — run multiple AI agents in parallel.
 - **Multiple Agents** — Use explore, researcher, or any custom agent
 - **Model Override** — Specify which model runs each task (e.g., `minimax/MiniMax-M2.5`)
 - **Session Persistence** — Resume cancelled tasks without losing context
+- **Slash Commands** — `/delegation` to list all delegation status and metadata
 - **System Prompt Injection** — Your `~/.config/opencode/async-agent.md` config is automatically loaded
 
 ## Installation
@@ -50,6 +51,16 @@ The plugin adds these tools to your OpenCode agent:
 | `delegation_cancel(id\|all)` | Cancel running task(s) |
 | `delegation_resume(id, prompt?)` | Resume cancelled task |
 
+### Slash Commands
+
+**`/delegation`** — List all active and completed delegations for the current session, including:
+- Delegation ID (with `opencode -s {id}` command to open session)
+- Status (running/completed/error/cancelled)
+- Agent used
+- Duration
+- Start time
+- Title/description
+
 ## Configuration
 
 first run "opencode models |grep <modelname> " and get the full provider/mode name 
@@ -80,19 +91,26 @@ My workflow with async agent goes like this:
 2. **Identify knowledge gaps** — When I don't know much about a specific component or tech choice
 
 3. **Launch parallel research** — I tell Opus: "Send 15 minimax agents to research this part"
-   - Web search for docs and tutorials
-   - zread/zai for GitHub repo exploration
-   - grep.app for real code examples
-   - MCP tools for specialized queries
-   - Clone OSS codebases and explore them
+   
+   Opus then makes multiple `delegate()` tool calls with:
+   ```
+   delegate(prompt="Research React patterns for large apps", agent="explore", model="minimax/MiniMax-M2.5")
+   ```
+   - Each delegation is a separate session owned by the main session
+   - Agents perform research using web search, zread/zai for GitHub, grep.app for code examples, MCP tools, or cloned OSS codebases
 
 4. **Continue planning while research runs** — Opus keeps working with me on the plan while the async agents investigate in the background
 
-5. **Get notified + read results** — When research completes, `<system-reminder>` fires to notify Opus, Opus reads the results internally with `delegation_read(id)`, then explains the findings to me
+5. **Check live progress** — To see what a delegation is doing in real-time:
+   - Press `Ctrl+X` then `←` / `→` to navigate sessions
+   - Child sessions appear under parent (owned by main agent)
+   - You can watch the agent work live
+
+6. **Get notified + read results** — When research completes, `<system-reminder>` fires to notify Opus, Opus reads the results internally with `delegation_read(id)`, then explains the findings to me
 
 The parallelism is key — 15 agents researching different aspects simultaneously means comprehensive information in the time it would take to do one sequential query.
 
-**Note:** I've also tried using async agent for parallel feature implementation but haven't found good success with that yet.
+**Note:** I've also tried using async agent for parallel feature implementation but haven't found good success with that.
 
 
 ## Project Structure
