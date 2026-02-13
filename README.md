@@ -16,18 +16,18 @@ Async background delegation for OpenCode — run multiple AI agents in parallel.
 
 ### Manual Setup (Current)
 
-  1. **Clone and build:**
-    ```bash
-    git clone https://github.com/aptdnfapt/opencode-async-agent
-    cd opencode-async-agent
-    npm install
-    npm run build
-    ```
+1. **Clone and build:**
+   ```bash
+   git clone https://github.com/aptdnfapt/opencode-async-agent
+   cd opencode-async-agent
+   npm install
+   npm run build
+   ```
 
 2. **Copy to OpenCode plugins:**
    ```bash
    mkdir -p ~/.config/opencode/plugin
-    cp dist/async-agent.js ~/.config/opencode/plugin/
+   cp dist/async-agent.js ~/.config/opencode/plugin/
    ```
 
 3. **Restart OpenCode** — the plugin auto-registers on startup
