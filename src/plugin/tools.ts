@@ -57,6 +57,11 @@ Use \`delegation_read\` with the session ID to retrieve the result.`,
 				return "❌ delegate requires messageID. This is a system error."
 			}
 
+			// Block sub-agents from using delegation
+			if (manager.findBySession(toolCtx.sessionID)) {
+				return "❌ Sub-agents cannot delegate tasks. Only the main agent can use delegation tools."
+			}
+
 			try {
 				const delegation = await manager.delegate({
 					parentSessionID: toolCtx.sessionID,
