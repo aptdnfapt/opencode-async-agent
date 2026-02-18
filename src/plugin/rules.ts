@@ -36,19 +36,20 @@ You WILL be notified via \`<system-reminder>\`. Polling wastes tokens.
 </delegation-system>
 </system-reminder>`
 
-// Read user's async-agent.md config file — contains model preferences for delegation
-// Returns file content or empty string if not found
+// Read user's async-agent(s).md config file — contains model preferences for delegation
+// Tries both async-agents.md and async-agent.md, returns first found or empty string
 export async function readBgAgentsConfig(): Promise<string> {
 	const { homedir } = await import("os")
 	const { readFile } = await import("fs/promises")
 	const { join } = await import("path")
 
-	const configPath = join(homedir(), ".config", "opencode", "async-agent.md")
-	try {
-		return await readFile(configPath, "utf-8")
-	} catch {
-		return ""
+	const configDir = join(homedir(), ".config", "opencode")
+	for (const name of ["async-agents.md", "async-agent.md"]) {
+		try {
+			return await readFile(join(configDir, name), "utf-8")
+		} catch {}
 	}
+	return ""
 }
 
 // Context injected during compaction so the agent remembers active delegations
