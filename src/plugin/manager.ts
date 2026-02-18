@@ -153,8 +153,8 @@ export class DelegationManager {
 			throw new Error(`Delegation "${delegationId}" not found`)
 		}
 
-		if (delegation.status !== "cancelled" && delegation.status !== "error") {
-			throw new Error(`Cannot resume delegation: status is "${delegation.status}". Only cancelled or error tasks can be resumed.`)
+		if (delegation.status === "running") {
+			throw new Error(`Delegation is already running. Wait for it to complete or cancel it first.`)
 		}
 
 		// Reset status
