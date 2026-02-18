@@ -213,6 +213,12 @@ export class DelegationManager {
 		if (!delegation) return false
 		if (delegation.status !== "running") return false
 
+		// Set cancelled BEFORE abort to prevent race with session.idle event
+		// Otherwise handleSessionIdle() sees status="running" and marks it "completed"
+		delegation.status = "cancelled"
+		delegation.completedAt = new Date()
+		delegation.duration = this.calculateDuration(delegation)
+
 		// Abort the session
 		try {
 			await this.client.session.abort({
@@ -221,10 +227,6 @@ export class DelegationManager {
 		} catch {
 			// Ignore abort errors
 		}
-
-		delegation.status = "cancelled"
-		delegation.completedAt = new Date()
-		delegation.duration = this.calculateDuration(delegation)
 
 		// Remove from pending
 		const pendingSet = this.pendingByParent.get(delegation.parentSessionID)
