@@ -540,14 +540,15 @@ Use \`delegation_read(id="${delegation.id}")\` to retrieve this result when read
 To inspect session content(human): opencode -s ${delegation.id}`
 			}
 
-			await this.client.session.prompt({
-				path: { id: delegation.parentSessionID },
-				body: {
-					noReply: !allComplete,
-					agent: delegation.parentAgent,
-					parts: [{ type: "text", text: notification }],
-				},
-			})
+		// Fire and forget - don't await to avoid deadlock when parent session is busy
+		this.client.session.prompt({
+			path: { id: delegation.parentSessionID },
+			body: {
+				noReply: !allComplete,
+				agent: delegation.parentAgent,
+				parts: [{ type: "text", text: notification }],
+			},
+		}).catch(() => {})
 
 			await this.debugLog(
 				`Notified parent session ${delegation.parentSessionID} (status=${statusText}, remaining=${remainingCount})`,
