@@ -1,4 +1,6 @@
 {
+  "name": "opencode-async-agent",
+  "version": "1.0.0",
   "scripts": {
     "build": "esbuild src/plugin/plugin.ts --bundle --format=esm --platform=node --outfile=dist/async-agent.js --external:@opencode-ai/plugin --external:@opencode-ai/sdk"
   },
