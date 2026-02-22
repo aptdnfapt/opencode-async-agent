@@ -29,7 +29,7 @@ If not specified, the agent's default model is used.
 **NEVER poll \`delegation_list\` to check completion.**
 You WILL be notified via \`<system-reminder>\`. Polling wastes tokens.
 
-**NEVER wait idle.** Always have productive work while delegations run.
+**Never run \`sleep 60\` or similar commands to wait for sessions.** Just stop and wait for the \`<system-reminder>\` notification.
 
 **Cancelled tasks can be resumed** with \`delegation_resume()\` - same session, full context.
 
