@@ -1,6 +1,6 @@
 {
   "name": "opencode-async-agent",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "dist/async-agent.js",
   "files": ["dist"],
   "scripts": {
