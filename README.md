@@ -11,6 +11,7 @@ Async background delegation for OpenCode — run multiple AI agents in parallel.
 - **Session Persistence** — Resume cancelled tasks without losing context
 - **Slash Commands** — `/delegation` to list all delegation status and metadata
 - **System Prompt Injection** — Your `~/.config/opencode/async-agent.md` config is automatically loaded
+- **AI-Powered Analysis** — Use `delegation_read(ai=true)` to get comprehensive session analysis
 
 ## Installation
 
@@ -64,7 +65,10 @@ The plugin adds these tools to your OpenCode agent:
 |------|-------------|
 | `delegate(prompt, agent)` | Start a background task |
 | `delegate(prompt, agent, model)` | Start with specific model |
-| `delegation_read(id)` | Get completed result |
+| `delegation_read(id)` | Get completed result (simple mode) |
+| `delegation_read(id, mode="full")` | Get all messages in session |
+| `delegation_read(id, ai=true)` | AI-powered session analysis |
+| `delegation_read(id, ai=true, ai_model="provider/model")` | Use specific model for analysis |
 | `delegation_list()` | List active/completed tasks |
 | `delegation_cancel(id\|all)` | Cancel running task(s) |
 | `delegation_resume(id, prompt?)` | Resume cancelled task |
@@ -119,7 +123,73 @@ This file is automatically injected into your agent's system prompt, so it knows
 
 **Alternative:** Create subagent markdown files with hardcoded models. Learn more at [Agents Documentation](https://opencode.ai/docs/agents/#markdown)
 
+## AI-Powered Session Analysis
+
+The `delegation_read` tool now supports AI-powered analysis to help main agents understand what happened in delegated sessions.
+
+### Usage
+
+```bash
+# Automatic model selection (uses parent session's model)
+delegation_read(id="session123", ai=true)
+
+# Or specify a custom model
+delegation_read(id="session123", ai=true, ai_model="minimax/MiniMax-M2.5")
+```
+
+### Model Selection Priority
+
+When `ai=true` and no `ai_model` is specified:
+1. **Uses `ai_model`** (if provided)
+2. **Falls back to parent session's model** (captured when delegation was created)
+3. **Falls back to OpenCode default model** (from `opencode config`)
+4. **Errors** if no model available
+
+### Analysis Output
+
+The AI provides a comprehensive markdown report covering:
+
+| Section | What It Evaluates |
+|---------|-------------------|
+| **Summary** | 2-3 sentence overview |
+| **What's AI Missed** | Requirements not met from original prompt |
+| **Wrong Doings** | Incorrect assumptions or bad approaches |
+| **Gave Up / Shortcuts** | Premature abandonment or skipped steps |
+| **Messed Up** | Broken functionality or introduced issues |
+| **Good Points / Choices** | Sound decisions worth replicating |
+| **Session Completion** | Proper finish, stream cut out, or ambiguous |
+| **Overall Status** | Assessment of session reliability |
+| **Next Action** | Recommendation for main agent |
+
+### Debug Logging
+
+To enable detailed logging of AI analysis calls:
+
+```bash
+export OC_ASYNC_DEBUG=true
+```
+
+Logs are saved to `~/.cache/opencode-delegation-ai/` in JSON format with:
+- Timestamp
+- Delegation ID
+- Model used
+- Status (success/error)
+- Duration
+- Result or error message
+
+### Requirements
+
+AI analysis requires:
+- **Completed session** — Only works on sessions with `completed` status
+- **Valid model** — Provider must exist in `~/.cache/opencode/models.json`
+- **API key** — Provider must be configured in `~/.local/share/opencode/auth.json`
+- **Timeout** — 60 seconds max for analysis API call
+
 ## How I Use It
+
+### For Parallel Research
+
+My workflow with async agent goes like this:
 
 My workflow with async agent goes like this:
 

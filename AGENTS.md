@@ -85,6 +85,15 @@ dist/
 4. Add any needed manager methods in `manager.ts`
 5. Rebuild
 
+### AI-powered delegation_read analysis
+- **Parent session model capture:** When creating delegation, fetch parent's model from `session.messages()` and store in `delegation.parentModel`
+- **Model selection priority:** `ai_model` → `parentModel` → `config.model` (OpenCode default)
+- **Direct API calls:** Make HTTP requests to provider APIs (not via OpenCode SDK)
+- **File paths:** Use `process.env.HOME` with `path.join()`, not hardcoded paths
+- **Node.js modules:** Use `fs.readFileSync/writeFileSync` instead of Bun APIs for cross-platform support
+- **Debug logging:** Only write to `~/.cache/opencode-delegation-ai/` when `OC_ASYNC_DEBUG=true`
+- **JSON parsing:** Parse `models.json` and `auth.json` from OpenCode cache directories
+
 ### Adding a new slash command
 1. Define command name constant in `plugin.ts`
 2. Register in `config` hook: `input.command[name] = { template, description }`
