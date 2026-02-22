@@ -95,6 +95,7 @@ export function createDelegationRead(manager: DelegationManager): ReturnType<typ
 Modes:
 - simple (default): Returns just the final result
 - full: Returns all messages in the session with timestamps
+- ai (requires ai=true): Use AI to analyze and summarize the entire session execution
 
 Use filters to get specific parts of the conversation.`,
 		args: {
@@ -119,6 +120,14 @@ Use filters to get specific parts of the conversation.`,
 				.number()
 				.optional()
 				.describe("Max messages to return, capped at 100 (full mode only)"),
+			ai: tool.schema
+				.boolean()
+				.optional()
+				.describe("Use AI to analyze and summarize the session"),
+			ai_model: tool.schema
+				.string()
+				.optional()
+				.describe("Model for AI analysis (e.g. 'minimax/MiniMax-M2.5'). Required when ai=true if no default model configured"),
 		},
 		async execute(args: ReadDelegationArgs, toolCtx: ToolContext): Promise<string> {
 			if (!toolCtx?.sessionID) {

@@ -38,6 +38,7 @@ export interface Delegation {
 	parentSessionID: string
 	parentMessageID: string
 	parentAgent: string
+	parentModel?: string // Parent session's model (provider/model format) - used as default for AI analysis
 	prompt: string
 	agent: string
 	model?: string // Full "provider/model" string (e.g. "minimax/MiniMax-M2.5")
@@ -77,4 +78,6 @@ export interface ReadDelegationArgs {
 	include_tools?: boolean
 	since_message_id?: string
 	limit?: number
+	ai?: boolean
+	ai_model?: string
 }
